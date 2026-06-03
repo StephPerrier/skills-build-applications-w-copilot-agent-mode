@@ -59,15 +59,37 @@ jobs:
 
       # START: Check practical exercise
 
-      - name: Check React 19 dependency
+      # - name: Check React 19 dependency
+      #   id: check-react-19
+      #   continue-on-error: true
+      #   uses: skills/action-keyphrase-checker@v2.0.0
+      #   with:
+      #     text-file: octofit-tracker/frontend/package.json
+      #     keyphrase: '"react": "^19'
+      #     minimum-occurrences: 1
+      #     case-sensitive: false
+
+      - name: Check React major version is 19
         id: check-react-19
         continue-on-error: true
-        uses: skills/action-keyphrase-checker@v2.0.0
-        with:
-          text-file: octofit-tracker/frontend/package.json
-          keyphrase: '"react": "^19'
-          minimum-occurrences: 1
-          case-sensitive: false
+        run: |
+          set -euo pipefail
+          file="octofit-tracker/frontend/package.json"
+          if [ ! -f "$file" ]; then
+            echo "File not found: $file"
+            exit 1
+          fi
+          ver=$(jq -r '.dependencies.react // .devDependencies.react // ""' "$file")
+          echo "Found react version string: '$ver'"
+          # Accept forms like ^19, ^19.0.0, 19.0.0, ~19.1.0
+          if [[ "$ver" =~ ^\^?19($|\.|-) ]] || [[ "$ver" =~ ^19($|\.|-) ]]; then
+            echo "OK: react major version 19 detected: $ver"
+            exit 0
+          else
+            echo "ERROR: expected react major version 19 but found: $ver"
+            exit 1
+          fi
+        shell: bash
 
       - name: Check Express dependency
         id: check-express
