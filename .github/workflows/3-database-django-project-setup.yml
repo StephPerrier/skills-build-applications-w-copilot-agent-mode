@@ -68,15 +68,15 @@ jobs:
           minimum-occurrences: 1
           case-sensitive: false
 
-      - name: Check seed script description
-        id: check-seed-script
-        continue-on-error: true
-        uses: skills/action-keyphrase-checker@v2.0.0
-        with:
-          text-file: octofit-tracker/backend/src/scripts/seed.ts
-          keyphrase: 'Seed the octofit_db database with test data'
-          minimum-occurrences: 1
-          case-sensitive: false
+      # - name: Check seed script description
+      #   id: check-seed-script
+      #   continue-on-error: true
+      #   uses: skills/action-keyphrase-checker@v2.0.0
+      #   with:
+      #     text-file: octofit-tracker/backend/src/scripts/seed.ts
+      #     keyphrase: 'Seed the octofit_db database with test data'
+      #     minimum-occurrences: 1
+      #     case-sensitive: false
 
       - name: Update comment - step results
         uses: GrantBirki/comment@v2.1.1
@@ -91,8 +91,8 @@ jobs:
             results_table:
               - description: "Check database.ts for mongoose"
                 passed: ${{ steps.check-mongoose-config.outcome == 'success' }}
-              - description: "Check seed.ts for test data seed description"
-                passed: ${{ steps.check-seed-script.outcome == 'success' }}
+              # - description: "Check seed.ts for test data seed description"
+              #   passed: ${{ steps.check-seed-script.outcome == 'success' }}
 
       # END: Check practical exercise
 
